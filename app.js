@@ -115,3 +115,72 @@ if (emailBtn) {
     // mailto: tetap berjalan normal jika ada email client
   });
 }
+
+// ============================================
+//  MUSIC PLAYER (Opsi 3)
+//  (Autoplay saat masuk web, kontrol pause
+//   di pojok kanan bawah)
+// ============================================
+const audio = document.getElementById('bg-music');
+const musicToggle = document.getElementById('music-toggle');
+
+let isMusicPlaying = false;
+
+function playMusic() {
+  if (!audio) return;
+  audio.play()
+    .then(() => {
+      isMusicPlaying = true;
+      if (musicToggle) {
+        musicToggle.classList.remove('paused');
+        musicToggle.querySelector('.music-icon').textContent = '⏸';
+        musicToggle.querySelector('.music-text').textContent = 'PLAYING LOFI';
+      }
+    })
+    .catch((err) => {
+      console.log('Autoplay diblokir oleh browser. Menunggu interaksi user untuk mulai memutar musik.');
+    });
+}
+
+function pauseMusic() {
+  if (!audio) return;
+  audio.pause();
+  isMusicPlaying = false;
+  if (musicToggle) {
+    musicToggle.classList.add('paused');
+    musicToggle.querySelector('.music-icon').textContent = '▶';
+    musicToggle.querySelector('.music-text').textContent = 'MUSIC PAUSED';
+  }
+}
+
+// Jalankan musik begitu halaman dimuat
+window.addEventListener('DOMContentLoaded', () => {
+  // Coba putar langsung
+  playMusic();
+
+  // Kebanyakan browser memblokir autoplay tanpa interaksi user.
+  // Sebagai fallback, begitu user pertama kali klik apa saja di layar, musik akan diputar otomatis.
+  const startOnInteraction = () => {
+    if (!isMusicPlaying) {
+      playMusic();
+    }
+    // Hapus event listener agar tidak terpicu terus-menerus
+    document.removeEventListener('click', startOnInteraction);
+    document.removeEventListener('keydown', startOnInteraction);
+  };
+
+  document.addEventListener('click', startOnInteraction);
+  document.addEventListener('keydown', startOnInteraction);
+});
+
+// Kontrol manual tombol di pojok kanan bawah
+if (musicToggle) {
+  musicToggle.addEventListener('click', (e) => {
+    e.stopPropagation(); // Mencegah terpicunya event handler interaksi di atas
+    if (isMusicPlaying) {
+      pauseMusic();
+    } else {
+      playMusic();
+    }
+  });
+}

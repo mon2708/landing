@@ -31,8 +31,21 @@
 
 <body>
 
+  <!-- ===== MUSIC / BACKGROUND LOFI ===== -->
+  <audio id="bg-music" loop preload="auto">
+    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3" type="audio/mpeg">
+  </audio>
+
   <!-- ===== CARD UTAMA ===== -->
   <main class="page-wrap">
+
+    <!-- ===== RUNNING TEXT (MARQUEE) ===== -->
+    <div class="marquee-wrap">
+      <div class="marquee-content">
+        ★ GRUP ZOMBIE APOCALYPSE AKTIF ★ @ARVN.5 ON YOUTUBE ★ CREATOR & DEV ★ GRUP ZOMBIE APOCALYPSE AKTIF ★ @ARVN.5 ON YOUTUBE ★ CREATOR & DEV ★
+      </div>
+    </div>
+
     <div class="card" id="main-card">
 
       <!-- Logo + Identity -->
@@ -141,6 +154,14 @@
       © 2026 ArvenIV
     </footer>
   </main>
+
+  <!-- ===== FLOATING MUSIC WIDGET ===== -->
+  <div class="music-floating-widget" id="music-widget">
+    <button class="music-toggle-btn" id="music-toggle" aria-label="Pause Music">
+      <span class="music-icon">⏸</span>
+      <span class="music-text">PLAYING LOFI</span>
+    </button>
+  </div>
 
   <script src="app.js"></script>
 </body>
