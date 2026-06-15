@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ArvenIV — Links</title>
+  <meta name="description" content="Channel YouTube, grup WhatsApp, dan kontak bisnis." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+  <!-- ===== CARD UTAMA ===== -->
+  <main class="page-wrap">
+    <div class="card" id="main-card">
+
+      <!-- Logo + Identity -->
+      <div class="identity" id="identity">
+        <div class="logo-box" id="logo-box">
+          <!--
+            Ganti src di bawah dengan path foto profil kamu.
+            Contoh: src="foto.jpg" atau src="https://..."
+          -->
+          <img src="custom-ava.png" alt="Foto profil ArvenIV"
+            onerror="this.style.display='none';this.parentElement.setAttribute('data-initials','A')" />
+        </div>
+        <div class="identity-text">
+          <h1 class="site-name" id="site-name">ArvenIV</h1>
+          <p class="site-tagline" id="site-tagline">Creator · Developer · Maker</p>
+        </div>
+      </div>
+
+      <div class="divider"><span>✦</span></div>
+
+      <!-- ===== SECTION 1 — YOUTUBE ===== -->
+      <section class="nb-section" id="section-youtube">
+        <div class="section-header">
+          <span class="section-badge" style="--badge-bg:#FF0000;--badge-fg:#fff;">▶ YouTube</span>
+          <h2 class="section-title">Channel Saya</h2>
+        </div>
+
+        <!-- Channel Profile Card -->
+        <a href="https://www.youtube.com/@arvn.5" target="_blank" rel="noopener" class="yt-profile-card"
+          id="yt-profile-card" aria-label="Buka channel YouTube ArvenIV">
+          <div class="yt-avatar-wrap">
+            <!--
+              Ganti src dengan foto profil YouTube kamu.
+              Bisa sama dengan profile.jpg di atas.
+            -->
+            <img src="q.png" alt="Avatar ArvenIV" class="yt-avatar"
+              onerror="this.style.display='none';this.parentElement.setAttribute('data-initials','A')" />
+            <span class="yt-live-badge">▶ YouTube</span>
+          </div>
+          <div class="yt-card-info">
+            <span class="yt-card-name">ArvenIV</span>
+            <span class="yt-card-handle">@arvn.5</span>
+            <span class="yt-card-cta">Kunjungi Channel →</span>
+          </div>
+        </a>
+
+      </section>
+
+      <div class="divider"><span>✦</span></div>
+
+      <!-- ===== SECTION 2 — WHATSAPP GROUP ===== -->
+      <section class="nb-section" id="section-whatsapp">
+        <div class="section-header">
+          <span class="section-badge" style="--badge-bg:#25D366;--badge-fg:#111;">💬 WhatsApp</span>
+          <h2 class="section-title">Grup Zombie Apocalypse</h2>
+        </div>
+        <p class="section-desc">
+          Gabung ke grup WhatsApp untuk diskusi, update terbaru, dan kolaborasi bareng!
+        </p>
+        <a href="https://chat.whatsapp.com/EPJorudAWbICTEknJauBx7?s=cl&p=a&ilr=4" target="_blank" rel="noopener"
+          class="nb-btn nb-btn--green" id="btn-whatsapp">
+          <span class="nb-btn__icon">💬</span>
+          Gabung Grup
+        </a>
+      </section>
+
+      <div class="divider"><span>✦</span></div>
+
+      <!-- ===== SECTION 3 — BUSINESS EMAIL ===== -->
+      <section class="nb-section" id="section-email">
+        <div class="section-header">
+          <span class="section-badge" style="--badge-bg:#4F6EF7;--badge-fg:#fff;">✉ Email</span>
+          <h2 class="section-title">Kontak Bisnis</h2>
+        </div>
+        <p class="section-desc">
+          Untuk kerjasama, sponsorship, atau pertanyaan — jangan ragu kirim email!
+        </p>
+        <a href="mailto:afterlife.digital.id@gmail.com" class="nb-btn nb-btn--blue" id="btn-email">
+          <span class="nb-btn__icon">✉</span>
+          Kirim Email
+        </a>
+      </section>
+
+    </div><!-- /card -->
+
+    <footer class="footer" id="footer">
+      © 2026 ArvenIV
+    </footer>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+
+</html>
