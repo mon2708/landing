@@ -2,36 +2,44 @@
    NEOBRUTALISM DESIGN SYSTEM
    ============================================ */
 :root {
-  --bg:           #F5F0E8;
-  --bg-card:      #FEFCF8;
-  --black:        #111111;
-  --shadow:       4px 4px 0px var(--black);
-  --shadow-lg:    6px 6px 0px var(--black);
-  --shadow-xl:    8px 8px 0px var(--black);
-  --border:       2.5px solid var(--black);
+  --bg: #F5F0E8;
+  --bg-card: #FEFCF8;
+  --black: #111111;
+  --shadow: 4px 4px 0px var(--black);
+  --shadow-lg: 6px 6px 0px var(--black);
+  --shadow-xl: 8px 8px 0px var(--black);
+  --border: 2.5px solid var(--black);
   --border-thick: 3px solid var(--black);
-  --radius:       4px;
-  --font-sans:    'Space Grotesk', system-ui, sans-serif;
-  --font-mono:    'Space Mono', monospace;
-  --yellow:       #FFE135;
-  --red:          #FF3B3B;
-  --green:        #25D366;
-  --blue:         #4F6EF7;
-  --transition:   0.12s ease;
+  --radius: 4px;
+  --font-sans: 'Space Grotesk', system-ui, sans-serif;
+  --font-mono: 'Space Mono', monospace;
+  --yellow: #FFE135;
+  --red: #FF3B3B;
+  --green: #25D366;
+  --blue: #7289d9;
+  --transition: 0.12s ease;
 }
 
 /* ============================================
    RESET & BASE
    ============================================ */
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+}
 
 body {
   font-family: var(--font-sans);
   background: var(--bg);
   background-image:
-    radial-gradient(circle, rgba(0,0,0,0.06) 1px, transparent 1px);
+    radial-gradient(circle, rgba(0, 0, 0, 0.06) 1px, transparent 1px);
   background-size: 20px 20px;
   min-height: 100vh;
   display: flex;
@@ -60,15 +68,14 @@ body {
   width: 100%;
   background: var(--bg-card);
   /* Subtle diagonal stripe texture */
-  background-image: repeating-linear-gradient(
-    -45deg,
-    transparent,
-    transparent 14px,
-    rgba(0,0,0,0.025) 14px,
-    rgba(0,0,0,0.025) 15px
-  );
+  background-image: repeating-linear-gradient(-45deg,
+      transparent,
+      transparent 14px,
+      rgba(0, 0, 0, 0.025) 14px,
+      rgba(0, 0, 0, 0.025) 15px);
   border: var(--border-thick);
-  border-top: 6px solid var(--yellow);   /* accent bar kuning di atas */
+  border-top: 6px solid var(--yellow);
+  /* accent bar kuning di atas */
   border-radius: var(--radius);
   box-shadow: var(--shadow-xl);
   padding: 2rem;
@@ -132,7 +139,8 @@ body {
   height: 72px;
   flex-shrink: 0;
   border: var(--border-thick);
-  border-radius: 50%;          /* foto profil = bulat */
+  border-radius: 50%;
+  /* foto profil = bulat */
   overflow: hidden;
   box-shadow: var(--shadow);
   display: flex;
@@ -142,10 +150,12 @@ body {
   transition: transform var(--transition), box-shadow var(--transition);
   position: relative;
 }
+
 .logo-box:hover {
   transform: translate(-2px, -2px);
   box-shadow: var(--shadow-lg);
 }
+
 .logo-box img {
   width: 100%;
   height: 100%;
@@ -153,6 +163,7 @@ body {
   display: block;
   border-radius: 50%;
 }
+
 /* Fallback inisial jika foto tidak ada */
 .logo-box[data-initials]::after {
   content: attr(data-initials);
@@ -186,6 +197,7 @@ body {
   align-items: center;
   gap: 0.4rem;
 }
+
 /* Titik hijau status online */
 .site-tagline::before {
   content: '';
@@ -208,6 +220,7 @@ body {
   margin: 0;
   color: var(--black);
 }
+
 .divider::before,
 .divider::after {
   content: '';
@@ -215,6 +228,7 @@ body {
   height: 2.5px;
   background: var(--black);
 }
+
 .divider span {
   font-size: 0.75rem;
   line-height: 1;
@@ -286,10 +300,12 @@ body {
   transition: transform var(--transition), box-shadow var(--transition);
   cursor: pointer;
 }
+
 .yt-profile-card:hover {
   transform: translate(-3px, -3px);
   box-shadow: var(--shadow-xl);
 }
+
 .yt-profile-card:active {
   transform: translate(2px, 2px);
   box-shadow: none;
@@ -355,6 +371,7 @@ body {
   font-family: var(--font-mono);
   transition: letter-spacing var(--transition);
 }
+
 .yt-profile-card:hover .yt-card-cta {
   letter-spacing: 0.04em;
 }
@@ -396,9 +413,20 @@ body {
   box-shadow: none;
 }
 
-.nb-btn--red   { background: #FF3B3B; color: #fff; }
-.nb-btn--green { background: #25D366; color: #111; }
-.nb-btn--blue  { background: #4F6EF7; color: #fff; }
+.nb-btn--red {
+  background: #FF3B3B;
+  color: #fff;
+}
+
+.nb-btn--green {
+  background: #25D366;
+  color: #111;
+}
+
+.nb-btn--blue {
+  background: #4F6EF7;
+  color: #fff;
+}
 
 .nb-btn__icon {
   font-size: 1rem;
@@ -415,6 +443,7 @@ body {
   font-size: 1.1rem;
   transition: transform var(--transition);
 }
+
 .nb-btn:hover::after {
   transform: translateX(3px);
 }
@@ -431,11 +460,72 @@ body {
 }
 
 /* ============================================
+   QUICK LINKS (Opsi 2)
+   ============================================ */
+.quick-links {
+  display: flex;
+  justify-content: center;
+  gap: 1.25rem;
+  padding: 1.5rem 0 0.5rem;
+  flex-wrap: wrap;
+}
+
+.quick-link-btn {
+  width: 52px;
+  height: 52px;
+  border: var(--border-thick);
+  border-radius: var(--radius);
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--black);
+  text-decoration: none;
+  box-shadow: var(--shadow);
+  transition: transform var(--transition), box-shadow var(--transition), background-color var(--transition), color var(--transition);
+  cursor: pointer;
+}
+
+.quick-link-btn svg {
+  width: 24px;
+  height: 24px;
+}
+
+.quick-link-btn:hover {
+  transform: translate(-3px, -3px);
+  box-shadow: var(--shadow-lg);
+  background-color: var(--btn-hover-bg, var(--yellow));
+  color: #111;
+}
+
+/* Biar ikon tetap kontras ketika hover background merah/biru gelap */
+.quick-link-btn[style*="--btn-hover-bg: var(--red)"]:hover,
+.quick-link-btn[style*="--btn-hover-bg: var(--blue)"]:hover {
+  color: #fff;
+}
+
+.quick-link-btn:active {
+  transform: translate(2px, 2px);
+  box-shadow: none;
+}
+
+/* ============================================
    RESPONSIVE
    ============================================ */
 @media (max-width: 480px) {
-  body { padding: 1.25rem 0.75rem 3rem; }
-  .card { padding: 1.5rem; }
-  .site-name { font-size: 1.35rem; }
-  .yt-preview { aspect-ratio: 4/3; }
+  body {
+    padding: 1.25rem 0.75rem 3rem;
+  }
+
+  .card {
+    padding: 1.5rem;
+  }
+
+  .site-name {
+    font-size: 1.35rem;
+  }
+
+  .yt-preview {
+    aspect-ratio: 4/3;
+  }
 }
