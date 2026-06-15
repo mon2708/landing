@@ -678,14 +678,10 @@ a, button, select, input, textarea, .quick-link-btn, .yt-profile-card, .nb-btn {
   font-size: 0.9rem;
 }
 
-.gb-reply-form-container .gb-input {
-  width: 100%;
-}
+/* reply form styles removed (feature not used) */
 
-.gb-reply-form-container .nb-btn {
-  padding: 0.45rem 0.7rem;
-  font-size: 0.78rem;
-}
+/* Like button styles */
+/* like buttons removed */
 
 /* Scrollbar Customization */
 .gb-messages::-webkit-scrollbar {
@@ -725,3 +721,48 @@ a, button, select, input, textarea, .quick-link-btn, .yt-profile-card, .nb-btn {
     aspect-ratio: 4/3;
   }
 }
+
+/* ============================================
+   EASTER EGG: Creeper GIF overlay
+   Appears when owner message is detected or logo is clicked
+   ============================================ */
+.ee-overlay {
+  position: fixed;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(0,0,0,0); /* start transparent, fade in */
+  z-index: 99999;
+  pointer-events: none;
+  opacity: 0;
+  transition: opacity 240ms ease, background-color 240ms ease;
+}
+.ee-overlay.show {
+  opacity: 1;
+  background: rgba(0,0,0,0.65);
+  pointer-events: auto;
+}
+.ee-img {
+  max-width: 80vw;
+  max-height: 80vh;
+  transform: scale(2);
+  opacity: 1;
+  transition: transform 1100ms cubic-bezier(.2,.9,.2,1), opacity 1100ms cubic-bezier(.2,.9,.2,1);
+  will-change: transform, opacity;
+  filter: drop-shadow(0 12px 24px rgba(0,0,0,0.6));
+}
+.ee-overlay.show .ee-img {
+  transform: scale(0.45);
+  opacity: 0;
+}
+.ee-spinner {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: 4px solid rgba(255,255,255,0.12);
+  border-top-color: rgba(255,255,255,0.85);
+  animation: ee-spin 800ms linear infinite;
+  margin: auto;
+}
+@keyframes ee-spin { to { transform: rotate(360deg); } }

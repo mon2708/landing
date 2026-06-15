@@ -124,7 +124,11 @@ const musicToggle = document.getElementById('music-toggle');
 const ytPlayerContainer = document.getElementById('yt-player');
 
 // Set default YouTube video ID here (ganti dengan ID video Anda)
-const YT_DEFAULT_ID = '7lPseBO6eDk';
+const YT_DEFAULT_ID = 'BTZMUDKSpSs';
+// Nama pemilik/owner situs — jika owner memberi like, tampilkan hati
+const OWNER_NAME = 'remon';
+// Easter egg image path (ubah path jika ingin pakai file lain)
+const EASTER_EGG_IMG = 'custom-ava.png';
 let player = null;
 let isMusicPlaying = false;
 const YT_LOCAL_KEY = 'yt_music_id';
@@ -296,6 +300,8 @@ function attemptAutoplayYT() {
   }
 }
 
+// (removed helper for message search)
+
 function escapeHTML(str) {
   return String(str || '').replace(/[&<>'"]/g,
     tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
@@ -312,6 +318,91 @@ function formatTime(dateStr) {
   } catch (e) {
     return dateStr;
   }
+}
+
+// EASTER EGG: show creeper GIF overlay once per short interval
+let _eeLocked = false;
+let _eeLoaded = false;
+let _eeImage = null;
+// Preload GIF to reduce buffering
+function preloadEasterGif() {
+  try {
+    _eeImage = new Image();
+    _eeImage.src = EASTER_EGG_IMG;
+    _eeImage.onload = () => { _eeLoaded = true; };
+    _eeImage.onerror = () => { _eeLoaded = false; };
+  } catch (e) { _eeLoaded = false; }
+}
+preloadEasterGif();
+
+function showCreeperEasterEgg() {
+  if (_eeLocked) return;
+  _eeLocked = true;
+  const overlay = document.createElement('div');
+  overlay.className = 'ee-overlay';
+
+  // spinner shown until image is ready
+  const spinner = document.createElement('div');
+  spinner.className = 'ee-spinner';
+  overlay.appendChild(spinner);
+  document.body.appendChild(overlay);
+
+  // ensure CSS initial state applied
+  requestAnimationFrame(() => {
+    // If image already loaded, swap spinner immediately and animate
+    if (_eeLoaded && _eeImage && _eeImage.complete) {
+      spinner.remove();
+      const img = document.createElement('img');
+      img.className = 'ee-img';
+      img.src = _eeImage.src;
+      img.alt = 'Creeper!';
+      overlay.appendChild(img);
+      // allow render then start animation by adding .show
+      requestAnimationFrame(() => overlay.classList.add('show'));
+      // cleanup after duration: remove .show to trigger fade-out, then remove element
+      setTimeout(() => {
+        overlay.classList.remove('show');
+        setTimeout(() => { try { overlay.remove(); } catch(e){} _eeLocked = false; }, 300);
+      }, 1300);
+    } else {
+      // wait for load or timeout
+      let settled = false;
+      const onLoad = () => {
+        if (settled) return; settled = true;
+        spinner.remove();
+        const img = document.createElement('img');
+        img.className = 'ee-img';
+        img.src = EASTER_EGG_IMG;
+        img.alt = 'Surprise!';
+        overlay.appendChild(img);
+        requestAnimationFrame(() => overlay.classList.add('show'));
+        setTimeout(() => {
+          overlay.classList.remove('show');
+          setTimeout(() => { try { overlay.remove(); } catch(e){} _eeLocked = false; }, 300);
+        }, 1300);
+      };
+      const onTimeout = () => {
+        if (settled) return; settled = true;
+        // fallback: play without image
+        overlay.classList.add('show');
+        setTimeout(() => {
+          overlay.classList.remove('show');
+          setTimeout(() => { try { overlay.remove(); } catch(e){} _eeLocked = false; }, 300);
+        }, 600);
+      };
+      if (!_eeImage) preloadEasterGif();
+      if (_eeImage) {
+        _eeImage.onload = onLoad;
+        _eeImage.onerror = onLoad; // treat error as loaded to avoid stuck spinner
+      }
+      setTimeout(onTimeout, 1200);
+    }
+  });
+}
+
+// Click on logo triggers easter egg
+if (logoBox) {
+  logoBox.addEventListener('click', () => showCreeperEasterEgg());
 }
 
 // Render isi pesan ke HTML
@@ -397,10 +488,21 @@ async function loadMessages() {
       if (error) throw error;
       // Supabase returns flat list; renderMessages akan membangun thread
       renderMessages(data || []);
+      // Jika ditemukan pesan dari owner, tampilkan easter egg
+      try {
+        if (Array.isArray(data) && data.some(m => (m.name||'').toLowerCase() === OWNER_NAME.toLowerCase())) {
+          showCreeperEasterEgg();
+        }
+      } catch (e) { /* ignore */ }
     } catch (err) {
       console.error('Gagal mengambil data dari Supabase:', err);
       // Fallback ke lokal
       renderMessages(localMessages.slice());
+      try {
+        if (localMessages && localMessages.some(m => (m.name||'').toLowerCase() === OWNER_NAME.toLowerCase())) {
+          showCreeperEasterEgg();
+        }
+      } catch (e) { /* ignore */ }
     }
   } else {
     // Mode lokal
@@ -451,7 +553,7 @@ if (gbForm) {
 
     if (!name || !text) return;
 
-    sendMessage(name, text, null);
+    sendMessage(name, text);
 
     // Reset input
     nameInput.value = '';
