@@ -117,9 +117,8 @@ if (emailBtn) {
 }
 
 // ============================================
-//  MUSIC PLAYER (Opsi 3)
-//  (Autoplay saat masuk web, kontrol pause
-//   di pojok kanan bawah)
+//  MUSIC PLAYER
+//  (Tidak otomatis play, harus di-klik)
 // ============================================
 const audio = document.getElementById('bg-music');
 const musicToggle = document.getElementById('music-toggle');
@@ -138,7 +137,7 @@ function playMusic() {
       }
     })
     .catch((err) => {
-      console.log('Autoplay diblokir oleh browser. Menunggu interaksi user untuk mulai memutar musik.');
+      console.log('Gagal memutar audio:', err);
     });
 }
 
@@ -153,30 +152,10 @@ function pauseMusic() {
   }
 }
 
-// Jalankan musik begitu halaman dimuat
-window.addEventListener('DOMContentLoaded', () => {
-  // Coba putar langsung
-  playMusic();
-
-  // Kebanyakan browser memblokir autoplay tanpa interaksi user.
-  // Sebagai fallback, begitu user pertama kali klik apa saja di layar, musik akan diputar otomatis.
-  const startOnInteraction = () => {
-    if (!isMusicPlaying) {
-      playMusic();
-    }
-    // Hapus event listener agar tidak terpicu terus-menerus
-    document.removeEventListener('click', startOnInteraction);
-    document.removeEventListener('keydown', startOnInteraction);
-  };
-
-  document.addEventListener('click', startOnInteraction);
-  document.addEventListener('keydown', startOnInteraction);
-});
-
 // Kontrol manual tombol di pojok kanan bawah
 if (musicToggle) {
   musicToggle.addEventListener('click', (e) => {
-    e.stopPropagation(); // Mencegah terpicunya event handler interaksi di atas
+    e.stopPropagation();
     if (isMusicPlaying) {
       pauseMusic();
     } else {
@@ -184,3 +163,82 @@ if (musicToggle) {
     }
   });
 }
+
+// ============================================
+//  GUESTBOOK (Buku Tamu)
+// ============================================
+const gbForm = document.getElementById('guestbook-form');
+const gbMessages = document.getElementById('gb-messages');
+
+// Data default awal jika localStorage kosong
+let messages = JSON.parse(localStorage.getItem('gb_messages')) || [
+  { name: "ArvenIV", text: "Halo semuanya! Selamat datang di landing page baru saya. Silakan tinggalkan pesan! 🙌", date: "Baru saja" },
+  { name: "Sistem", text: "Fitur buku tamu ini berjalan dengan aman menggunakan LocalStorage.", date: "Sistem" }
+];
+
+function escapeHTML(str) {
+  return str.replace(/[&<>'"]/g, 
+    tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
+  );
+}
+
+function renderMessages() {
+  if (!gbMessages) return;
+  gbMessages.innerHTML = '';
+  
+  // Render dalam urutan terbalik (pesan terbaru berada di paling atas)
+  messages.slice().reverse().forEach((msg) => {
+    const item = document.createElement('div');
+    item.className = 'gb-msg-item';
+    
+    // Warna-warni pastel neobrutalis untuk post-it bubble secara acak berdasarkan nama
+    const colors = ['#FEFCF8', '#FFF176', '#A7FFEB', '#E1BEE7', '#FF8A80', '#CCFF90'];
+    const hash = msg.name.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    const colorIndex = Math.abs(hash) % colors.length;
+    item.style.backgroundColor = colors[colorIndex];
+
+    item.innerHTML = `
+      <div class="gb-msg-meta">
+        <span>👤 ${escapeHTML(msg.name)}</span>
+        <span>${msg.date}</span>
+      </div>
+      <p class="gb-msg-text">${escapeHTML(msg.text)}</p>
+    `;
+    gbMessages.appendChild(item);
+  });
+}
+
+if (gbForm) {
+  gbForm.addEventListener('submit', (e) => {
+    e.preventDefault();
+    const nameInput = document.getElementById('gb-name');
+    const messageInput = document.getElementById('gb-message');
+
+    const name = nameInput.value.trim();
+    const text = messageInput.value.trim();
+
+    if (!name || !text) return;
+
+    const newMsg = {
+      name: name,
+      text: text,
+      date: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
+    };
+
+    messages.push(newMsg);
+    localStorage.setItem('gb_messages', JSON.stringify(messages));
+    
+    // Tampilkan ulang pesan
+    renderMessages();
+
+    // Reset input
+    nameInput.value = '';
+    messageInput.value = '';
+
+    // Tampilkan toast notifikasi
+    showToast('✓ Pesan berhasil dikirim!');
+  });
+}
+
+// Jalankan fungsi tampil pesan pertama kali
+renderMessages();

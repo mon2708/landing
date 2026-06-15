@@ -145,6 +145,37 @@
 
     </div><!-- /card -->
 
+    <!-- ===== CARD GUESTBOOK (Buku Tamu) ===== -->
+    <div class="card card--guestbook" id="guestbook-card">
+      <div class="identity" style="padding-bottom: 0.75rem;">
+        <div class="logo-box" style="width: 52px; height: 52px; background: var(--blue);">
+          <span style="font-size: 1.5rem;">✍️</span>
+        </div>
+        <div class="identity-text">
+          <h2 class="section-title" style="font-size: 1.3rem;">Buku Tamu</h2>
+          <p class="site-tagline" style="margin-top: 0.1rem;">Tinggalkan sapaan atau pesan singkat!</p>
+        </div>
+      </div>
+
+      <div class="divider" style="margin: 0.75rem 0 1.25rem;"><span>✦</span></div>
+
+      <!-- Form Input -->
+      <form id="guestbook-form" class="gb-form">
+        <input type="text" id="gb-name" placeholder="Nama kamu..." required class="gb-input" maxlength="25">
+        <textarea id="gb-message" placeholder="Tulis pesan kamu di sini..." required class="gb-input gb-textarea" rows="2" maxlength="150"></textarea>
+        <button type="submit" class="nb-btn nb-btn--blue" style="margin-top: 0.25rem;">
+          Kirim Pesan 🚀
+        </button>
+      </form>
+
+      <div class="divider" style="margin: 1.5rem 0 1rem;"><span>✦</span></div>
+
+      <!-- Container Pesan Mengambang -->
+      <div class="gb-messages" id="gb-messages">
+        <!-- Pesan di-inject dari app.js -->
+      </div>
+    </div>
+
     <footer class="footer" id="footer">
       © 2026 ArvenIV
     </footer>
@@ -152,9 +183,9 @@
 
   <!-- ===== FLOATING MUSIC WIDGET ===== -->
   <div class="music-floating-widget" id="music-widget">
-    <button class="music-toggle-btn" id="music-toggle" aria-label="Pause Music">
-      <span class="music-icon">⏸</span>
-      <span class="music-text">PLAYING LOFI</span>
+    <button class="music-toggle-btn paused" id="music-toggle" aria-label="Play Music">
+      <span class="music-icon">▶</span>
+      <span class="music-text">MUSIC PAUSED</span>
     </button>
   </div>
 
