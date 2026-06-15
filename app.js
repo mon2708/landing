@@ -176,36 +176,130 @@ let messages = JSON.parse(localStorage.getItem('gb_messages')) || [
   { name: "Sistem", text: "Fitur buku tamu ini berjalan dengan aman menggunakan LocalStorage.", date: "Sistem" }
 ];
 
+// ============================================
+//  GUESTBOOK (Buku Tamu) - Supabase Cloud DB
+// ============================================
+const gbForm = document.getElementById('guestbook-form');
+const gbMessages = document.getElementById('gb-messages');
+
+// Ganti URL dan API Key dengan milik Anda dari dashboard Supabase
+const SUPABASE_URL = 'YOUR_SUPABASE_URL';
+const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+
+let supabaseClient = null;
+let useSupabase = false;
+
+// Periksa apakah kredensial default sudah diganti
+if (SUPABASE_URL !== 'YOUR_SUPABASE_URL' && SUPABASE_ANON_KEY !== 'YOUR_SUPABASE_ANON_KEY') {
+  try {
+    supabaseClient = window.supabase.createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+    useSupabase = true;
+  } catch (e) {
+    console.warn('Gagal menginisialisasi Supabase. Menggunakan mode lokal (LocalStorage).', e);
+  }
+}
+
+// Data lokal default untuk fallback
+let localMessages = JSON.parse(localStorage.getItem('gb_messages')) || [
+  { name: "ArvenIV", text: "Selamat datang! Silakan hubungkan database Supabase kamu agar semua pengunjung bisa melihat pesan satu sama lain.", date: "Baru saja" }
+];
+
 function escapeHTML(str) {
   return str.replace(/[&<>'"]/g, 
     tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
   );
 }
 
-function renderMessages() {
+// Format waktu dari Supabase atau objek lokal
+function formatTime(dateStr) {
+  if (!dateStr || dateStr === "Baru saja" || dateStr === "Sistem") return dateStr;
+  try {
+    const d = new Date(dateStr);
+    return d.toLocaleDateString('id-ID', { day: '2-digit', month: 'short' }) + ' ' + 
+           d.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+  } catch(e) {
+    return dateStr;
+  }
+}
+
+// Render isi pesan ke HTML
+function renderMessages(dataList) {
   if (!gbMessages) return;
   gbMessages.innerHTML = '';
-  
-  // Render dalam urutan terbalik (pesan terbaru berada di paling atas)
-  messages.slice().reverse().forEach((msg) => {
+
+  dataList.forEach((msg) => {
     const item = document.createElement('div');
     item.className = 'gb-msg-item';
     
-    // Warna-warni pastel neobrutalis untuk post-it bubble secara acak berdasarkan nama
+    // Warna pastel acak untuk post-it bubble neobrutalism
     const colors = ['#FEFCF8', '#FFF176', '#A7FFEB', '#E1BEE7', '#FF8A80', '#CCFF90'];
     const hash = msg.name.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
     const colorIndex = Math.abs(hash) % colors.length;
     item.style.backgroundColor = colors[colorIndex];
 
+    const displayDate = formatTime(msg.date || msg.created_at);
+
     item.innerHTML = `
       <div class="gb-msg-meta">
         <span>👤 ${escapeHTML(msg.name)}</span>
-        <span>${msg.date}</span>
+        <span>${displayDate}</span>
       </div>
-      <p class="gb-msg-text">${escapeHTML(msg.text)}</p>
+      <p class="gb-msg-text">${escapeHTML(msg.text || msg.message)}</p>
     `;
     gbMessages.appendChild(item);
   });
+}
+
+// Ambil data dari database online / lokal
+async function loadMessages() {
+  if (useSupabase && supabaseClient) {
+    try {
+      const { data, error } = await supabaseClient
+        .from('guestbook')
+        .select('*')
+        .order('created_at', { ascending: false })
+        .limit(40);
+
+      if (error) throw error;
+      renderMessages(data);
+    } catch (err) {
+      console.error('Gagal mengambil data dari Supabase:', err);
+      // Fallback ke lokal
+      renderMessages(localMessages.slice().reverse());
+    }
+  } else {
+    // Mode lokal
+    renderMessages(localMessages.slice().reverse());
+  }
+}
+
+// Kirim pesan baru ke database online / lokal
+async function sendMessage(name, text) {
+  if (useSupabase && supabaseClient) {
+    try {
+      const { error } = await supabaseClient
+        .from('guestbook')
+        .insert([{ name: name, message: text }]);
+
+      if (error) throw error;
+      showToast('✓ Pesan berhasil dikirim!');
+      loadMessages();
+    } catch (err) {
+      console.error('Gagal mengirim ke Supabase:', err);
+      showToast('❌ Gagal mengirim, dicoba lagi nanti.');
+    }
+  } else {
+    // Mode lokal
+    const newMsg = {
+      name: name,
+      text: text,
+      date: new Date().toISOString()
+    };
+    localMessages.push(newMsg);
+    localStorage.setItem('gb_messages', JSON.stringify(localMessages));
+    showToast('✓ Pesan disimpan di browser lokal!');
+    loadMessages();
+  }
 }
 
 if (gbForm) {
@@ -219,26 +313,13 @@ if (gbForm) {
 
     if (!name || !text) return;
 
-    const newMsg = {
-      name: name,
-      text: text,
-      date: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
-    };
-
-    messages.push(newMsg);
-    localStorage.setItem('gb_messages', JSON.stringify(messages));
-    
-    // Tampilkan ulang pesan
-    renderMessages();
+    sendMessage(name, text);
 
     // Reset input
     nameInput.value = '';
     messageInput.value = '';
-
-    // Tampilkan toast notifikasi
-    showToast('✓ Pesan berhasil dikirim!');
   });
 }
 
-// Jalankan fungsi tampil pesan pertama kali
-renderMessages();
+// Ambil pesan saat pertama kali halaman dimuat
+loadMessages();
