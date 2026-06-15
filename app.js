@@ -152,7 +152,7 @@ function createYouTubePlayer(videoId) {
         height: '0', width: '0', videoId: videoId,
         playerVars: { autoplay: 0, controls: 0, modestbranding: 1, rel: 0, iv_load_policy: 3 },
         events: {
-          onReady: function () { attemptAutoplayYT(); },
+          onReady: function () { attemptAutoplayYT(); bindFirstGestureUnmute(); },
           onStateChange: function (e) { if (e.data === 1) { isMusicPlaying = true; updateMusicUI(); } else if (e.data === 2 || e.data === 0) { isMusicPlaying = false; updateMusicUI(); } }
         }
       });
@@ -162,11 +162,32 @@ function createYouTubePlayer(videoId) {
       height: '0', width: '0', videoId: videoId,
       playerVars: { autoplay: 0, controls: 0, modestbranding: 1, rel: 0, iv_load_policy: 3 },
       events: {
-        onReady: function () { attemptAutoplayYT(); },
+        onReady: function () { attemptAutoplayYT(); bindFirstGestureUnmute(); },
         onStateChange: function (e) { if (e.data === 1) { isMusicPlaying = true; updateMusicUI(); } else if (e.data === 2 || e.data === 0) { isMusicPlaying = false; updateMusicUI(); } }
       }
     });
   }
+}
+
+// Saat interaksi pertama dari user, unmute dan play (menghindari kebutuhan klik dua kali)
+function bindFirstGestureUnmute() {
+  function onFirstGesture() {
+    if (!player) return;
+    try {
+      if (player.isMuted && player.isMuted()) {
+        player.unMute && player.unMute();
+      } else {
+        // ensure unmuted
+        player.unMute && player.unMute();
+      }
+      player.setVolume && player.setVolume(100);
+      player.playVideo && player.playVideo();
+    } catch (e) {
+      // ignore errors
+    }
+  }
+  // Use pointerdown/click as a user gesture; one-time listener
+  window.addEventListener('pointerdown', onFirstGesture, { once: true, passive: true });
 }
 
 function playMusic() {
