@@ -31,10 +31,7 @@
 
 <body>
 
-  <!-- ===== MUSIC / BACKGROUND LOFI ===== -->
-  <audio id="bg-music" loop preload="auto">
-    <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-8.mp3" type="audio/mpeg">
-  </audio>
+  <!-- Musik sekarang dikendalikan via YouTube iframe (lihat widget di pojok) -->
 
   <!-- ===== CARD UTAMA ===== -->
   <main class="page-wrap">
@@ -187,6 +184,7 @@
       <span class="music-icon">▶</span>
       <span class="music-text">MUSIC PAUSED</span>
     </button>
+    <div id="yt-player" style="display:none; width:0; height:0;"></div>
   </div>
 
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>

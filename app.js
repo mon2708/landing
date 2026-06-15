@@ -117,52 +117,115 @@ if (emailBtn) {
 }
 
 // ============================================
-//  MUSIC PLAYER
-//  (Tidak otomatis play, harus di-klik)
+//  MUSIC PLAYER (YouTube iframe minimal)
+//  Setup hanya dari kode: edit `YT_DEFAULT_ID` di bawah.
 // ============================================
-const audio = document.getElementById('bg-music');
 const musicToggle = document.getElementById('music-toggle');
+const ytPlayerContainer = document.getElementById('yt-player');
 
+// Set default YouTube video ID here (ganti dengan ID video Anda)
+const YT_DEFAULT_ID = '7lPseBO6eDk';
+let player = null;
 let isMusicPlaying = false;
+const YT_LOCAL_KEY = 'yt_music_id';
+
+function extractYouTubeId(urlOrId) {
+  if (!urlOrId) return null;
+  if (/^[A-Za-z0-9_-]{11}$/.test(urlOrId)) return urlOrId;
+  const m = urlOrId.match(/[?&]v=([A-Za-z0-9_-]{11})/) || urlOrId.match(/youtu\.be\/([A-Za-z0-9_-]{11})/) || urlOrId.match(/youtube\.com\/embed\/([A-Za-z0-9_-]{11})/);
+  return m ? m[1] : null;
+}
+
+function createYouTubePlayer(videoId) {
+  if (!videoId) return;
+  if (player && player.loadVideoById) {
+    player.loadVideoById(videoId);
+    return;
+  }
+  ytPlayerContainer.innerHTML = '<div id="yt-player-inner"></div>';
+  if (!window.YT) {
+    const tag = document.createElement('script');
+    tag.src = 'https://www.youtube.com/iframe_api';
+    document.head.appendChild(tag);
+    window.onYouTubeIframeAPIReady = function () {
+      player = new YT.Player('yt-player-inner', {
+        height: '0', width: '0', videoId: videoId,
+        playerVars: { autoplay: 0, controls: 0, modestbranding: 1, rel: 0, iv_load_policy: 3 },
+        events: {
+          onReady: function () { attemptAutoplayYT(); },
+          onStateChange: function (e) { if (e.data === 1) { isMusicPlaying = true; updateMusicUI(); } else if (e.data === 2 || e.data === 0) { isMusicPlaying = false; updateMusicUI(); } }
+        }
+      });
+    };
+  } else {
+    player = new YT.Player('yt-player-inner', {
+      height: '0', width: '0', videoId: videoId,
+      playerVars: { autoplay: 0, controls: 0, modestbranding: 1, rel: 0, iv_load_policy: 3 },
+      events: {
+        onReady: function () { attemptAutoplayYT(); },
+        onStateChange: function (e) { if (e.data === 1) { isMusicPlaying = true; updateMusicUI(); } else if (e.data === 2 || e.data === 0) { isMusicPlaying = false; updateMusicUI(); } }
+      }
+    });
+  }
+}
 
 function playMusic() {
-  if (!audio) return;
-  audio.play()
-    .then(() => {
-      isMusicPlaying = true;
-      if (musicToggle) {
-        musicToggle.classList.remove('paused');
-        musicToggle.querySelector('.music-icon').textContent = '⏸';
-        musicToggle.querySelector('.music-text').textContent = 'PLAYING LOFI';
-      }
-    })
-    .catch((err) => {
-      console.log('Gagal memutar audio:', err);
-    });
+  if (!player || !player.playVideo) return;
+  try {
+    // Pastikan unmuted dan volume naik sebelum play
+    try { player.unMute && player.unMute(); } catch (e) { /* ignore */ }
+    try { player.setVolume && player.setVolume(100); } catch (e) { /* ignore */ }
+    player.playVideo();
+    isMusicPlaying = true;
+    updateMusicUI();
+  } catch (e) {
+    console.warn('playVideo error', e);
+  }
 }
 
 function pauseMusic() {
-  if (!audio) return;
-  audio.pause();
-  isMusicPlaying = false;
-  if (musicToggle) {
+  if (!player || !player.pauseVideo) return;
+  try {
+    player.pauseVideo();
+    isMusicPlaying = false;
+    updateMusicUI();
+  } catch (e) {
+    console.warn('pauseVideo error', e);
+  }
+}
+
+function updateMusicUI() {
+  if (!musicToggle) return;
+  if (isMusicPlaying) {
+    musicToggle.classList.remove('paused');
+    musicToggle.querySelector('.music-icon').textContent = '⏸';
+    musicToggle.querySelector('.music-text').textContent = 'PLAYING';
+  } else {
     musicToggle.classList.add('paused');
     musicToggle.querySelector('.music-icon').textContent = '▶';
     musicToggle.querySelector('.music-text').textContent = 'MUSIC PAUSED';
   }
 }
 
-// Kontrol manual tombol di pojok kanan bawah
 if (musicToggle) {
   musicToggle.addEventListener('click', (e) => {
     e.stopPropagation();
-    if (isMusicPlaying) {
-      pauseMusic();
-    } else {
-      playMusic();
+    if (!player) {
+      const stored = localStorage.getItem(YT_LOCAL_KEY);
+      const vid = extractYouTubeId(stored) || extractYouTubeId(YT_DEFAULT_ID);
+      if (vid) createYouTubePlayer(vid);
+      else return showToast('Set YouTube ID di kode (YT_DEFAULT_ID)');
     }
+    if (isMusicPlaying) pauseMusic(); else playMusic();
   });
 }
+
+// Jika sudah ada setelan di localStorage atau di kode, buat player saat load (tidak autoplay)
+window.addEventListener('load', () => {
+  const stored = localStorage.getItem(YT_LOCAL_KEY);
+  const id = extractYouTubeId(stored) || extractYouTubeId(YT_DEFAULT_ID);
+  if (id) createYouTubePlayer(id);
+});
 
 // ============================================
 //  GUESTBOOK (Buku Tamu) - Supabase Cloud DB
@@ -187,13 +250,33 @@ if (SUPABASE_URL !== 'YOUR_SUPABASE_URL' && SUPABASE_ANON_KEY !== 'YOUR_SUPABASE
   }
 }
 
-// Data lokal default untuk fallback
+// Data lokal default untuk fallback (setiap pesan memiliki `id` dan array `replies`)
 let localMessages = JSON.parse(localStorage.getItem('gb_messages')) || [
-  { name: "ArvenIV", text: "Selamat datang! Silakan hubungkan database Supabase kamu agar semua pengunjung bisa melihat pesan satu sama lain.", date: "Baru saja" }
+  { id: String(Date.now()), name: "ArvenIV", text: "Selamat datang! Silakan hubungkan database Supabase kamu agar semua pengunjung bisa melihat pesan satu sama lain.", date: "Baru saja", replies: [] }
 ];
 
+// (Removed legacy audio/file-upload code; music now uses YouTube iframe only)
+
+// AUTOPLAY helper: coba mainkan video; jika diblokir, fallback ke muted autoplay
+function attemptAutoplayYT() {
+  if (!player) return;
+  try {
+    // coba play normal
+    player.unMute && player.unMute();
+    player.playVideo && player.playVideo();
+    // jika tidak berubah ke playing dalam 700ms, coba mute+play
+    setTimeout(() => {
+      if (!isMusicPlaying) {
+        try { player.mute && player.mute(); player.playVideo && player.playVideo(); } catch (e) { /* ignore */ }
+      }
+    }, 700);
+  } catch (e) {
+    try { player.mute && player.mute(); player.playVideo && player.playVideo(); } catch (er) { /* ignore */ }
+  }
+}
+
 function escapeHTML(str) {
-  return str.replace(/[&<>'"]/g,
+  return String(str || '').replace(/[&<>'"]/g,
     tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
   );
 }
@@ -211,21 +294,48 @@ function formatTime(dateStr) {
 }
 
 // Render isi pesan ke HTML
-function renderMessages(dataList) {
-  if (!gbMessages) return;
-  gbMessages.innerHTML = '';
+// Build threaded message tree from flat list (supports 'reply_to')
+function buildThread(flatList) {
+  const map = {};
+  const roots = [];
 
-  dataList.forEach((msg) => {
+  flatList.forEach(m => {
+    const msg = Object.assign({}, m);
+    msg.id = String(msg.id || msg._local_id || msg._id || msg._uid || Date.now() + Math.random());
+    msg.replies = msg.replies || [];
+    map[msg.id] = msg;
+  });
+
+  Object.values(map).forEach(msg => {
+    const parentId = msg.reply_to || msg.parentId || null;
+    if (parentId && map[parentId]) {
+      map[parentId].replies = map[parentId].replies || [];
+      map[parentId].replies.push(msg);
+    } else {
+      roots.push(msg);
+    }
+  });
+
+  // Sort by date descending for roots and replies
+  const sortFn = (a, b) => new Date(b.created_at || b.date || 0) - new Date(a.created_at || a.date || 0);
+  roots.sort(sortFn);
+  Object.values(map).forEach(m => { if (m.replies) m.replies.sort(sortFn); });
+
+  return roots;
+}
+
+// Render threaded messages recursively
+function renderThread(list, container) {
+  container.innerHTML = '';
+  list.forEach(msg => {
     const item = document.createElement('div');
     item.className = 'gb-msg-item';
 
-    // Warna pastel acak untuk post-it bubble neobrutalism
     const colors = ['#FEFCF8', '#FFF176', '#A7FFEB', '#E1BEE7', '#FF8A80', '#CCFF90'];
-    const hash = msg.name.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
-    const colorIndex = Math.abs(hash) % colors.length;
-    item.style.backgroundColor = colors[colorIndex];
+    const hash = String(msg.name || '').split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
+    item.style.backgroundColor = colors[Math.abs(hash) % colors.length];
 
-    const displayDate = formatTime(msg.date || msg.created_at);
+    const displayDate = formatTime(msg.date || msg.created_at || msg.createdAt);
 
     item.innerHTML = `
       <div class="gb-msg-meta">
@@ -233,9 +343,24 @@ function renderMessages(dataList) {
         <span>${displayDate}</span>
       </div>
       <p class="gb-msg-text">${escapeHTML(msg.text || msg.message)}</p>
+      <div class="gb-replies" data-parent="${escapeHTML(msg.id)}" style="margin-top:0.6rem; margin-left:0.6rem;"></div>
     `;
-    gbMessages.appendChild(item);
+
+    container.appendChild(item);
+
+    // Render replies recursively under reply container
+    const replyContainer = item.querySelector('.gb-replies');
+    if (msg.replies && msg.replies.length) {
+      renderThread(msg.replies, replyContainer);
+    }
   });
+}
+
+// Main entry: render messages (flatList may be from Supabase or local)
+function renderMessages(flatList) {
+  if (!gbMessages) return;
+  const tree = buildThread(flatList.slice());
+  renderThread(tree, gbMessages);
 }
 
 // Ambil data dari database online / lokal
@@ -246,18 +371,19 @@ async function loadMessages() {
         .from('guestbook')
         .select('*')
         .order('created_at', { ascending: false })
-        .limit(40);
+        .limit(200);
 
       if (error) throw error;
-      renderMessages(data);
+      // Supabase returns flat list; renderMessages akan membangun thread
+      renderMessages(data || []);
     } catch (err) {
       console.error('Gagal mengambil data dari Supabase:', err);
       // Fallback ke lokal
-      renderMessages(localMessages.slice().reverse());
+      renderMessages(localMessages.slice());
     }
   } else {
     // Mode lokal
-    renderMessages(localMessages.slice().reverse());
+    renderMessages(localMessages.slice());
   }
 }
 
@@ -265,9 +391,10 @@ async function loadMessages() {
 async function sendMessage(name, text) {
   if (useSupabase && supabaseClient) {
     try {
+      const payload = { name: name, message: text };
       const { error } = await supabaseClient
         .from('guestbook')
-        .insert([{ name: name, message: text }]);
+        .insert([payload]);
 
       if (error) throw error;
       showToast('✓ Pesan berhasil dikirim!');
@@ -277,11 +404,13 @@ async function sendMessage(name, text) {
       showToast('❌ Gagal mengirim, dicoba lagi nanti.');
     }
   } else {
-    // Mode lokal
+    // Mode lokal: simpan sebagai pesan root
     const newMsg = {
+      id: String(Date.now()) + Math.random(),
       name: name,
       text: text,
-      date: new Date().toISOString()
+      date: new Date().toISOString(),
+      replies: []
     };
     localMessages.push(newMsg);
     localStorage.setItem('gb_messages', JSON.stringify(localMessages));
@@ -301,7 +430,7 @@ if (gbForm) {
 
     if (!name || !text) return;
 
-    sendMessage(name, text);
+    sendMessage(name, text, null);
 
     // Reset input
     nameInput.value = '';

@@ -669,6 +669,24 @@ a, button, select, input, textarea, .quick-link-btn, .yt-profile-card, .nb-btn {
   word-break: break-word;
 }
 
+/* Replies styling: nested slightly smaller and indented */
+.gb-replies .gb-msg-item {
+  transform-origin: left top;
+  background: rgba(255,255,255,0.95);
+  border-style: dashed;
+  padding: 0.6rem 0.85rem;
+  font-size: 0.9rem;
+}
+
+.gb-reply-form-container .gb-input {
+  width: 100%;
+}
+
+.gb-reply-form-container .nb-btn {
+  padding: 0.45rem 0.7rem;
+  font-size: 0.78rem;
+}
+
 /* Scrollbar Customization */
 .gb-messages::-webkit-scrollbar {
   width: 8px;
