@@ -3,11 +3,11 @@
 const logoBox = document.getElementById('logo-box');
 if (logoBox) {
   logoBox.addEventListener('mousemove', (e) => {
-    const rect  = logoBox.getBoundingClientRect();
-    const cx    = rect.left + rect.width  / 2;
-    const cy    = rect.top  + rect.height / 2;
-    const dx    = (e.clientX - cx) / (rect.width  / 2);
-    const dy    = (e.clientY - cy) / (rect.height / 2);
+    const rect = logoBox.getBoundingClientRect();
+    const cx = rect.left + rect.width / 2;
+    const cy = rect.top + rect.height / 2;
+    const dx = (e.clientX - cx) / (rect.width / 2);
+    const dy = (e.clientY - cy) / (rect.height / 2);
     logoBox.style.transform = `rotate(${dx * 6}deg) translateY(-2px)`;
   });
   logoBox.addEventListener('mouseleave', () => {
@@ -19,13 +19,13 @@ if (logoBox) {
 document.querySelectorAll('.nb-btn').forEach((btn) => {
   btn.addEventListener('click', function (e) {
     const ripple = document.createElement('span');
-    const rect   = btn.getBoundingClientRect();
-    const size   = Math.max(rect.width, rect.height);
+    const rect = btn.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
     ripple.style.cssText = `
       position:absolute;
       width:${size}px;height:${size}px;
-      left:${e.clientX - rect.left - size/2}px;
-      top:${e.clientY  - rect.top  - size/2}px;
+      left:${e.clientX - rect.left - size / 2}px;
+      top:${e.clientY - rect.top - size / 2}px;
       background:rgba(255,255,255,0.3);
       border-radius:50%;
       transform:scale(0);
@@ -165,26 +165,14 @@ if (musicToggle) {
 }
 
 // ============================================
-//  GUESTBOOK (Buku Tamu)
-// ============================================
-const gbForm = document.getElementById('guestbook-form');
-const gbMessages = document.getElementById('gb-messages');
-
-// Data default awal jika localStorage kosong
-let messages = JSON.parse(localStorage.getItem('gb_messages')) || [
-  { name: "ArvenIV", text: "Halo semuanya! Selamat datang di landing page baru saya. Silakan tinggalkan pesan! 🙌", date: "Baru saja" },
-  { name: "Sistem", text: "Fitur buku tamu ini berjalan dengan aman menggunakan LocalStorage.", date: "Sistem" }
-];
-
-// ============================================
 //  GUESTBOOK (Buku Tamu) - Supabase Cloud DB
 // ============================================
 const gbForm = document.getElementById('guestbook-form');
 const gbMessages = document.getElementById('gb-messages');
 
 // Ganti URL dan API Key dengan milik Anda dari dashboard Supabase
-const SUPABASE_URL = 'YOUR_SUPABASE_URL';
-const SUPABASE_ANON_KEY = 'YOUR_SUPABASE_ANON_KEY';
+const SUPABASE_URL = 'https://oikvbvepywlvibkfzorb.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9pa3ZidmVweXdsdmlia2Z6b3JiIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODE1NDAxMzksImV4cCI6MjA5NzExNjEzOX0.QSduuIX5_Wjj4-E2lT9RLwiXXuTvI8Ms6x0AraGBvo0';
 
 let supabaseClient = null;
 let useSupabase = false;
@@ -205,7 +193,7 @@ let localMessages = JSON.parse(localStorage.getItem('gb_messages')) || [
 ];
 
 function escapeHTML(str) {
-  return str.replace(/[&<>'"]/g, 
+  return str.replace(/[&<>'"]/g,
     tag => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[tag] || tag)
   );
 }
@@ -215,9 +203,9 @@ function formatTime(dateStr) {
   if (!dateStr || dateStr === "Baru saja" || dateStr === "Sistem") return dateStr;
   try {
     const d = new Date(dateStr);
-    return d.toLocaleDateString('id-ID', { day: '2-digit', month: 'short' }) + ' ' + 
-           d.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
-  } catch(e) {
+    return d.toLocaleDateString('id-ID', { day: '2-digit', month: 'short' }) + ' ' +
+      d.toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' });
+  } catch (e) {
     return dateStr;
   }
 }
@@ -230,7 +218,7 @@ function renderMessages(dataList) {
   dataList.forEach((msg) => {
     const item = document.createElement('div');
     item.className = 'gb-msg-item';
-    
+
     // Warna pastel acak untuk post-it bubble neobrutalism
     const colors = ['#FEFCF8', '#FFF176', '#A7FFEB', '#E1BEE7', '#FF8A80', '#CCFF90'];
     const hash = msg.name.split('').reduce((acc, char) => acc + char.charCodeAt(0), 0);
