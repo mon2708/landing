@@ -116,141 +116,10 @@ if (emailBtn) {
   });
 }
 
-// ============================================
-//  MUSIC PLAYER (YouTube iframe minimal)
-//  Setup hanya dari kode: edit `YT_DEFAULT_ID` di bawah.
-// ============================================
-const musicToggle = document.getElementById('music-toggle');
-const ytPlayerContainer = document.getElementById('yt-player');
-
-// Set default YouTube video ID here (ganti dengan ID video Anda)
-const YT_DEFAULT_ID = 'BTZMUDKSpSs';
-// Nama pemilik/owner situs — jika owner memberi like, tampilkan hati
+// Music player removed per user request.
+// Keep owner + easter-egg constants used elsewhere:
 const OWNER_NAME = 'remon';
-// Easter egg image path (ubah path jika ingin pakai file lain)
 const EASTER_EGG_IMG = 'custom-ava.png';
-let player = null;
-let isMusicPlaying = false;
-const YT_LOCAL_KEY = 'yt_music_id';
-
-function extractYouTubeId(urlOrId) {
-  if (!urlOrId) return null;
-  if (/^[A-Za-z0-9_-]{11}$/.test(urlOrId)) return urlOrId;
-  const m = urlOrId.match(/[?&]v=([A-Za-z0-9_-]{11})/) || urlOrId.match(/youtu\.be\/([A-Za-z0-9_-]{11})/) || urlOrId.match(/youtube\.com\/embed\/([A-Za-z0-9_-]{11})/);
-  return m ? m[1] : null;
-}
-
-function createYouTubePlayer(videoId) {
-  if (!videoId) return;
-  if (player && player.loadVideoById) {
-    player.loadVideoById(videoId);
-    return;
-  }
-  ytPlayerContainer.innerHTML = '<div id="yt-player-inner"></div>';
-  if (!window.YT) {
-    const tag = document.createElement('script');
-    tag.src = 'https://www.youtube.com/iframe_api';
-    document.head.appendChild(tag);
-    window.onYouTubeIframeAPIReady = function () {
-      player = new YT.Player('yt-player-inner', {
-        height: '0', width: '0', videoId: videoId,
-        playerVars: { autoplay: 0, controls: 0, modestbranding: 1, rel: 0, iv_load_policy: 3 },
-        events: {
-          onReady: function () { attemptAutoplayYT(); bindFirstGestureUnmute(); },
-          onStateChange: function (e) { if (e.data === 1) { isMusicPlaying = true; updateMusicUI(); } else if (e.data === 2 || e.data === 0) { isMusicPlaying = false; updateMusicUI(); } }
-        }
-      });
-    };
-  } else {
-    player = new YT.Player('yt-player-inner', {
-      height: '0', width: '0', videoId: videoId,
-      playerVars: { autoplay: 0, controls: 0, modestbranding: 1, rel: 0, iv_load_policy: 3 },
-      events: {
-        onReady: function () { attemptAutoplayYT(); bindFirstGestureUnmute(); },
-        onStateChange: function (e) { if (e.data === 1) { isMusicPlaying = true; updateMusicUI(); } else if (e.data === 2 || e.data === 0) { isMusicPlaying = false; updateMusicUI(); } }
-      }
-    });
-  }
-}
-
-// Saat interaksi pertama dari user, unmute dan play (menghindari kebutuhan klik dua kali)
-function bindFirstGestureUnmute() {
-  function onFirstGesture() {
-    if (!player) return;
-    try {
-      if (player.isMuted && player.isMuted()) {
-        player.unMute && player.unMute();
-      } else {
-        // ensure unmuted
-        player.unMute && player.unMute();
-      }
-      player.setVolume && player.setVolume(100);
-      player.playVideo && player.playVideo();
-    } catch (e) {
-      // ignore errors
-    }
-  }
-  // Use pointerdown/click as a user gesture; one-time listener
-  window.addEventListener('pointerdown', onFirstGesture, { once: true, passive: true });
-}
-
-function playMusic() {
-  if (!player || !player.playVideo) return;
-  try {
-    // Pastikan unmuted dan volume naik sebelum play
-    try { player.unMute && player.unMute(); } catch (e) { /* ignore */ }
-    try { player.setVolume && player.setVolume(100); } catch (e) { /* ignore */ }
-    player.playVideo();
-    isMusicPlaying = true;
-    updateMusicUI();
-  } catch (e) {
-    console.warn('playVideo error', e);
-  }
-}
-
-function pauseMusic() {
-  if (!player || !player.pauseVideo) return;
-  try {
-    player.pauseVideo();
-    isMusicPlaying = false;
-    updateMusicUI();
-  } catch (e) {
-    console.warn('pauseVideo error', e);
-  }
-}
-
-function updateMusicUI() {
-  if (!musicToggle) return;
-  if (isMusicPlaying) {
-    musicToggle.classList.remove('paused');
-    musicToggle.querySelector('.music-icon').textContent = '⏸';
-    musicToggle.querySelector('.music-text').textContent = 'PLAYING';
-  } else {
-    musicToggle.classList.add('paused');
-    musicToggle.querySelector('.music-icon').textContent = '▶';
-    musicToggle.querySelector('.music-text').textContent = 'MUSIC PAUSED';
-  }
-}
-
-if (musicToggle) {
-  musicToggle.addEventListener('click', (e) => {
-    e.stopPropagation();
-    if (!player) {
-      const stored = localStorage.getItem(YT_LOCAL_KEY);
-      const vid = extractYouTubeId(stored) || extractYouTubeId(YT_DEFAULT_ID);
-      if (vid) createYouTubePlayer(vid);
-      else return showToast('Set YouTube ID di kode (YT_DEFAULT_ID)');
-    }
-    if (isMusicPlaying) pauseMusic(); else playMusic();
-  });
-}
-
-// Jika sudah ada setelan di localStorage atau di kode, buat player saat load (tidak autoplay)
-window.addEventListener('load', () => {
-  const stored = localStorage.getItem(YT_LOCAL_KEY);
-  const id = extractYouTubeId(stored) || extractYouTubeId(YT_DEFAULT_ID);
-  if (id) createYouTubePlayer(id);
-});
 
 // ============================================
 //  GUESTBOOK (Buku Tamu) - Supabase Cloud DB
@@ -280,25 +149,7 @@ let localMessages = JSON.parse(localStorage.getItem('gb_messages')) || [
   { id: String(Date.now()), name: "ArvenIV", text: "Selamat datang! Silakan hubungkan database Supabase kamu agar semua pengunjung bisa melihat pesan satu sama lain.", date: "Baru saja", replies: [] }
 ];
 
-// (Removed legacy audio/file-upload code; music now uses YouTube iframe only)
-
-// AUTOPLAY helper: coba mainkan video; jika diblokir, fallback ke muted autoplay
-function attemptAutoplayYT() {
-  if (!player) return;
-  try {
-    // coba play normal
-    player.unMute && player.unMute();
-    player.playVideo && player.playVideo();
-    // jika tidak berubah ke playing dalam 700ms, coba mute+play
-    setTimeout(() => {
-      if (!isMusicPlaying) {
-        try { player.mute && player.mute(); player.playVideo && player.playVideo(); } catch (e) { /* ignore */ }
-      }
-    }, 700);
-  } catch (e) {
-    try { player.mute && player.mute(); player.playVideo && player.playVideo(); } catch (er) { /* ignore */ }
-  }
-}
+// (legacy audio/upload removed)
 
 // (removed helper for message search)
 

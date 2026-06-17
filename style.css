@@ -522,61 +522,7 @@ a, button, select, input, textarea, .quick-link-btn, .yt-profile-card, .nb-btn {
 
 
 
-/* ============================================
-   FLOATING MUSIC PLAYER (Opsi 3)
-   ============================================ */
-.music-floating-widget {
-  position: fixed;
-  bottom: 1.5rem;
-  right: 1.5rem;
-  z-index: 1000;
-}
-
-.music-toggle-btn {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  padding: 0.65rem 1rem;
-  border: var(--border-thick);
-  border-radius: var(--radius);
-  background: var(--yellow);
-  color: var(--black);
-  font-family: var(--font-mono);
-  font-size: 0.8rem;
-  font-weight: 700;
-  box-shadow: var(--shadow);
-  transition: transform var(--transition), box-shadow var(--transition), background-color var(--transition);
-}
-
-.music-toggle-btn:hover {
-  transform: translate(-3px, -3px);
-  box-shadow: var(--shadow-lg);
-  background-color: #fff;
-}
-
-.music-toggle-btn:active {
-  transform: translate(2px, 2px);
-  box-shadow: none;
-}
-
-.music-toggle-btn.paused {
-  background-color: #e5dfd5;
-}
-
-.music-icon {
-  font-size: 1rem;
-  line-height: 1;
-}
-
-/* Spin animation for music icon when playing */
-.music-toggle-btn:not(.paused) .music-icon {
-  animation: spinMusic 3.5s linear infinite;
-}
-
-@keyframes spinMusic {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
+/* music player styles removed */
 
 /* ============================================
    GUESTBOOK CARD & MESSAGES
