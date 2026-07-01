@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Arcane Arsenal 1.1.1 — Mod Detail</title>
+  <meta name="description" content="Detail Arcane Arsenal mod untuk Fabric 1.20.1." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <main class="page-wrap">
+    <div class="card">
+      <div class="identity" id="identity">
+        <div class="logo-box" id="logo-box">
+          <img src="mods/icon/arcane-arsenal.png" alt="Icon Arcane Arsenal"
+            onerror="this.style.display='none';this.parentElement.setAttribute('data-initials','A')" />
+        </div>
+        <div class="identity-text">
+          <h1 class="site-name">Arcane Arsenal</h1>
+          <p class="site-tagline">Detail mod termasuk versi, loader, dan fitur.</p>
+        </div>
+      </div>
+
+      <div class="divider"><span>✦</span></div>
+
+      <section class="nb-section highlighted-section" id="section-mod-detail">
+        <div class="section-header">
+          <span class="section-badge" style="--badge-bg:#1bd96a;--badge-fg:#fff;">📄 Detail Mod</span>
+          <h2 class="section-title">Arcane Arsenal 1.1.1</h2>
+        </div>
+        <div id="markdown-container" class="markdown-body"></div>
+      </section>
+
+      <div class="divider"><span>✦</span></div>
+      <a href="mods.html" class="nb-btn nb-btn--yellow" style="width:max-content;">← Kembali ke Mod List</a>
+      <footer class="footer" id="footer">
+        © 2026 ArvenIV
+      </footer>
+    </div>
+  </main>
+
+  <script>
+    const markdown = `#
+    <a href="https://www.curseforge.com/minecraft/mc-mods/fabric-api"><img src="https://i.imgur.com/Ol1Tcf8.png" alt="Requires Fabric API" width="150"/></a>
+more detail on [Modrinth](https://modrinth.com/mod/arcaneeee)
+*Found a bug or have a suggestion? Open an issue on the project page!*
+`;
+
+    function parseInline(text) {
+      return text
+        .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+        .replace(/\[(.+?)\]\((.+?)\)/g, '<a href="$2">$1</a>')
+        .replace(/\*(.+?)\*/g, '<em>$1</em>');
+    }
+
+    function renderTable(rows) {
+      const cells = rows.map(row => row.split('|').slice(1, -1).map(cell => cell.trim()));
+      const isHeader = cells.length > 1 && /^[:\-\s]+$/.test(cells[1].join(''));
+      const start = isHeader ? 2 : 0;
+      let html = '<table>';
+
+      if (isHeader) {
+        html += '<thead><tr>' + cells[0].map(cell => '<th>' + parseInline(cell) + '</th>').join('') + '</tr></thead>';
+        html += '<tbody>' + rows.slice(2).map(row => '<tr>' + row.split('|').slice(1, -1).map(cell => '<td>' + parseInline(cell.trim()) + '</td>').join('') + '</tr>').join('') + '</tbody>';
+      } else {
+        html += '<tbody>' + rows.map(row => '<tr>' + row.split('|').slice(1, -1).map(cell => '<td>' + parseInline(cell.trim()) + '</td>').join('') + '</tr>').join('') + '</tbody>';
+      }
+
+      html += '</table>';
+      return html;
+    }
+
+    function renderMarkdown(text) {
+      const lines = text.split('\\n');
+      let html = '';
+      let inList = false;
+      let inTable = false;
+      let tableRows = [];
+
+      function closeList() {
+        if (inList) {
+          html += '</ul>';
+          inList = false;
+        }
+      }
+
+      function closeTable() {
+        if (inTable) {
+          html += renderTable(tableRows);
+          tableRows = [];
+          inTable = false;
+        }
+      }
+
+      for (const rawLine of lines) {
+        const line = rawLine.trim();
+
+        if (!line) {
+          closeList();
+          closeTable();
+          continue;
+        }
+
+        if (/^---$/.test(line)) {
+          closeList();
+          closeTable();
+          html += '<hr />';
+          continue;
+        }
+
+        if (/^\|.*\|$/.test(line)) {
+          closeList();
+          inTable = true;
+          tableRows.push(line);
+          continue;
+        }
+
+        if (/^#{3}\s/.test(line)) {
+          closeList();
+          closeTable();
+          html += '<h3>' + parseInline(line.replace(/^#{3}\s/, '')) + '</h3>';
+          continue;
+        }
+
+        if (/^#{2}\s/.test(line)) {
+          closeList();
+          closeTable();
+          html += '<h2>' + parseInline(line.replace(/^#{2}\s/, '')) + '</h2>';
+          continue;
+        }
+
+        if (/^#\s/.test(line)) {
+          closeList();
+          closeTable();
+          html += '<h1>' + parseInline(line.replace(/^#\s/, '')) + '</h1>';
+          continue;
+        }
+
+        if (/^[-*+]\s+/.test(line)) {
+          if (!inList) {
+            closeTable();
+            inList = true;
+            html += '<ul>';
+          }
+          html += '<li>' + parseInline(line.replace(/^[-*+]\s+/, '')) + '</li>';
+          continue;
+        }
+
+        closeList();
+        closeTable();
+        html += '<p>' + parseInline(line) + '</p>';
+      }
+
+      closeList();
+      closeTable();
+      return html;
+    }
+
+    const container = document.getElementById('markdown-container');
+    container.innerHTML = renderMarkdown(markdown);
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Mod List — ArvenIV</title>
+  <meta name="description" content="Halaman mod list ArvenIV dengan daftar mod dan profil Modrinth." />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=Space+Mono:wght@400;700&display=swap"
+    rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+  <main class="page-wrap">
+    <div class="card">
+      <div class="identity" id="identity">
+        <div class="logo-box" id="logo-box">
+          <img src="custom-ava.png" alt="Foto profil ArvenIV"
+            onerror="this.style.display='none';this.parentElement.setAttribute('data-initials','A')" />
+        </div>
+        <div class="identity-text">
+          <h1 class="site-name">Mod List</h1>
+          <p class="site-tagline">Halaman khusus daftar mod dan profil Modrinth.</p>
+        </div>
+      </div>
+
+      <div class="divider"><span>✦</span></div>
+
+      <section class="nb-section highlighted-section" id="section-mod-list">
+        <div class="section-header">
+          <span class="section-badge" style="--badge-bg:#1bd96a;--badge-fg:#fff;">🎮 Mod List</span>
+          <h2 class="section-title">Mod List Khusus</h2>
+        </div>
+        <p class="section-desc">Langsung download mod yang sudah ditambahkan, tanpa harus ke halaman Modrinth dulu.</p>
+
+        <div class="mod-profile-card">
+          <div class="mod-profile-avatar">M</div>
+          <div>
+            <strong>Profil Modrinth</strong>
+            <p>Mon2708 di Modrinth</p>
+            <a href="https://modrinth.com/user/mon2708" target="_blank" rel="noopener" class="nb-btn nb-btn--blue">
+              Buka Profil Modrinth
+            </a>
+          </div>
+        </div>
+
+        <div class="mod-list">
+          <div class="mod-item">
+            <img src="mods/icon/arcane-arsenal.png" alt="Icon Arcane Arsenal" class="mod-item-icon" onerror="this.style.display='none'" />
+
+            <a href="mod-arcane-arsenal.html" class="mod-item-link" aria-label="Lihat informasi Arcane Arsenal">
+              <div class="mod-item-info">
+                <h3>Arcane Arsenal 1.1.1</h3>
+                <p>Version: 1.20.1 · Loader: Fabric</p>
+              </div>
+            </a>
+
+            <a href="mods/arcane-arsenal-1.1.1.jar" class="mod-download-box nb-btn nb-btn--green" download aria-label="Download Arcane Arsenal" title="Download">
+              <svg class="download-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+                <title>Download</title>
+                <rect x="3" y="3" width="18" height="18" rx="3" fill="none" stroke="currentColor" stroke-width="0" />
+                <path d="M12 3v10" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M7 11l5 5 5-5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+                <path d="M5 19h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/>
+              </svg>
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <div class="divider"><span>✦</span></div>
+      <a href="index.html" class="nb-btn nb-btn--yellow" style="width:max-content;">← Kembali ke Home</a>
+
+      <footer class="footer" id="footer">
+        © 2026 ArvenIV
+      </footer>
+    </div>
+  </main>
+</body>
+
+</html>

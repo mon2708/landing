@@ -1,4 +1,4 @@
-/* ============================================
+﻿/* ============================================
    NEOBRUTALISM DESIGN SYSTEM
    ============================================ */
 :root {
@@ -181,7 +181,7 @@ body {
 
 .site-name {
   font-family: var(--font-sans);
-  font-size: 1.6rem;
+  font-size: 1.35rem;
   font-weight: 700;
   letter-spacing: -0.02em;
   line-height: 1.1;
@@ -276,11 +276,356 @@ body {
 
 .section-desc {
   font-size: 0.9rem;
-  line-height: 1.6;
+  line-height: 1.7;
   color: #444;
   border-left: 3px solid var(--black);
   padding-left: 0.75rem;
   font-family: var(--font-mono);
+}
+
+.markdown-body {
+  color: #111111;
+  line-height: 1.75;
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  padding: 0.75rem 1rem 0;
+}
+
+.markdown-body h1,
+.markdown-body h2,
+.markdown-body h3 {
+  margin: 1rem 0 0.4rem;
+  color: #111111;
+  line-height: 1.2;
+}
+
+.markdown-body h1 {
+  font-size: 1.4rem;
+}
+
+.markdown-body h2 {
+  font-size: 1.15rem;
+}
+
+.markdown-body h3 {
+  font-size: 1rem;
+}
+
+.markdown-body p {
+  margin: 0.65rem 0 0;
+}
+
+.markdown-body strong {
+  color: #000000;
+}
+
+.markdown-body em {
+  color: #333333;
+}
+
+.markdown-body ul {
+  margin: 0.75rem 0 0 1.2rem;
+  padding-left: 1rem;
+}
+
+.markdown-body li {
+  margin: 0.35rem 0;
+  padding-left: 0.25rem;
+}
+
+.markdown-body hr {
+  border: none;
+  border-top: 1px solid rgba(0, 0, 0, 0.14);
+  margin: 1.2rem 0;
+}
+
+.markdown-body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  background: rgba(255, 255, 255, 0.05);
+}
+
+.markdown-body th,
+.markdown-body td {
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  padding: 0.65rem 0.8rem;
+  text-align: left;
+}
+
+.markdown-body th {
+  background: rgba(255, 255, 255, 0.08);
+}
+
+.markdown-body a {
+  color: #1bd96a;
+  text-decoration: underline;
+}
+
+.markdown-body img {
+  display: inline-block;
+  max-width: 100%;
+  border-radius: 0.6rem;
+  margin: 0.9rem 0;
+}
+
+.nb-section.highlighted-section {
+  background: rgba(27, 217, 106, 0.08);
+  border: 2px dashed #1bd96a;
+  border-radius: 14px;
+  padding: 1.7rem 1.3rem;
+}
+
+.mod-profile-card {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  border: 2px solid #111;
+  border-radius: 12px;
+  padding: 1rem;
+  background: #fff;
+  box-shadow: var(--shadow);
+}
+
+.mod-profile-avatar {
+  width: 64px;
+  height: 64px;
+  border-radius: 12px;
+  background: #1bd96a;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  font-family: var(--font-mono);
+  font-size: 1.6rem;
+  font-weight: 700;
+  border: 2px solid var(--black);
+}
+
+.mod-list {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+}
+
+.mod-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  padding: 1rem;
+  border: 2px dashed #1bd96a;
+  border-radius: 12px;
+  background: rgba(255,255,255,0.95);
+}
+
+.mod-item-link {
+  display: flex;
+  gap: 1rem;
+  text-decoration: none;
+  color: inherit;
+  flex: 1;
+  min-width: 0;
+}
+
+.mod-item-icon {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
+  background: #1bd96a;
+  display: grid;
+  place-items: center;
+  font-size: 1.3rem;
+  color: #111;
+  border: 2px solid var(--black);
+}
+
+.mod-item-icon img {
+  width: 100%;
+  height: 100%;
+  border-radius: inherit;
+  object-fit: cover;
+  display: block;
+}
+
+.mod-item-info {
+  min-width: 0;
+}
+
+/* Mod list item layout */
+.mod-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.9rem;
+}
+
+.mod-item {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 0.65rem;
+  border: 2px solid var(--black);
+  border-radius: 10px;
+  background: var(--bg-card);
+  justify-content: space-between;
+}
+
+.mod-item-link {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-decoration: none;
+  color: inherit;
+  flex: 1;
+  min-width: 0;
+}
+
+.mod-item-icon {
+  width: 56px;
+  height: 56px;
+  border-radius: 8px;
+  overflow: hidden;
+  display: block;
+  object-fit: cover;
+}
+
+.mod-download-box {
+  position: static;
+  transform: none !important;
+  width: 44px;
+  height: 44px;
+  min-width: 44px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  border-radius: 8px;
+  font-size: 1.05rem;
+  margin-left: 12px;
+}
+
+.mod-download-box:hover {
+  transform: none !important;
+  box-shadow: var(--shadow-lg);
+}
+
+/* Prevent parent hover or global button hover from shifting this tiny download box */
+.mod-download-box {
+  transition: transform 0.12s ease, box-shadow 0.12s ease;
+  z-index: 20;
+}
+
+.nb-btn.mod-download-box:hover,
+.mod-download-box.nb-btn:hover {
+  /* keep centered vertically and avoid the global -2px,-2px shift */
+  transform: translateY(-50%);
+  box-shadow: var(--shadow);
+}
+
+.mod-item:hover .mod-download-box {
+  /* ensure parent hover doesn't displace the button */
+  transform: translateY(-50%);
+}
+
+.mod-item-info h3 {
+  margin: 0;
+  font-size: 1rem;
+}
+
+.mod-item-info p {
+  margin: 0.35rem 0 0;
+  color: #333;
+  font-size: 0.88rem;
+}
+
+body.page-dark {
+  background: #08101e;
+  color: #e5ecff;
+}
+
+body.page-dark .card {
+  background: #111827;
+  border-color: #3b82f6;
+  border-top-color: #60a5fa;
+  box-shadow: 0 8px 0 rgba(0, 0, 0, 0.18);
+}
+
+body.page-dark .section-desc {
+  color: #cfe2ff;
+  border-left-color: #60a5fa;
+}
+
+body.page-dark .mod-profile-card,
+body.page-dark .mod-item {
+  background: #111a27;
+  border-color: rgba(96, 165, 250, 0.3);
+}
+
+body.page-dark .mod-profile-avatar {
+  background: #60a5fa;
+}
+
+body.page-dark .nb-btn.nb-btn--blue,
+body.page-dark .nb-btn.nb-btn--green,
+body.page-dark .nb-btn.nb-btn--yellow {
+  color: #111;
+}
+
+body.page-dark .section-badge {
+  box-shadow: 2px 2px 0 rgba(255, 255, 255, 0.12);
+}
+
+body.page-dark .nb-section.highlighted-section {
+  background: rgba(96, 165, 250, 0.08);
+  border-color: rgba(96, 165, 250, 0.25);
+}
+
+body.page-dark .mod-item-icon {
+  background: transparent;
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+body.page-dark .markdown-body {
+  color: #242424;
+}
+
+body.page-dark .markdown-body h1,
+body.page-dark .markdown-body h2,
+body.page-dark .markdown-body h3 {
+  color: #494949;
+}
+
+body.page-dark .markdown-body p,
+body.page-dark .markdown-body li {
+  color: #3b3b3b;
+}
+
+body.page-dark .markdown-body table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 1rem 0;
+  background: rgba(255, 255, 255, 0.04);
+}
+
+body.page-dark .markdown-body th,
+body.page-dark .markdown-body td {
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.65rem 0.8rem;
+  text-align: left;
+}
+
+body.page-dark .markdown-body th {
+  background: rgba(255, 255, 255, 0.08);
+  color: #4d4d4d;
+}
+
+body.page-dark .markdown-body hr {
+  border: none;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  margin: 1.2rem 0;
+}
+
+body.page-dark .markdown-body a {
+  color: #303e4e;
 }
 
 /* ============================================
@@ -403,6 +748,30 @@ body {
   overflow: hidden;
 }
 
+.rn-btn {
+  display: inline-flex;
+  align-items: right;
+  gap: 0.6rem;
+  padding: 0.75rem 0.25rem;
+  font-family: var(--font-sans);
+  font-size: 0.95rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+  color: var(--black);
+  border: var(--border-thick);
+  border-radius: var(--radius);
+  text-decoration: none;
+  cursor: pointer;
+  box-shadow: var(--shadow);
+  transition:
+    transform var(--transition),
+    box-shadow var(--transition);
+  width: 100%;
+  justify-content: center;
+  position: relative;
+  overflow: hidden;
+}
+
 .nb-btn:hover {
   transform: translate(-2px, -2px);
   box-shadow: var(--shadow-lg);
@@ -446,6 +815,39 @@ body {
 
 .nb-btn:hover::after {
   transform: translateX(3px);
+}
+
+/* Override for small boxed download button inside mod list */
+.nb-btn.mod-download-box,
+.mod-download-box.nb-btn {
+  width: auto !important;
+  padding: 0;
+  display: inline-flex !important;
+  align-items: center;
+  justify-content: center;
+  box-shadow: var(--shadow);
+}
+
+.nb-btn.mod-download-box::after,
+.mod-download-box.nb-btn::after {
+  content: none !important;
+}
+
+/* download icon sizing */
+.download-icon {
+  width: 18px;
+  height: 18px;
+  display: block;
+}
+
+/* give the boxed download the same hover effect as normal buttons */
+.mod-download-box {
+  transition: transform var(--transition), box-shadow var(--transition);
+}
+
+.mod-download-box:hover {
+  transform: translate(-2px, -2px);
+  box-shadow: var(--shadow-lg);
 }
 
 /* ============================================
